@@ -3,6 +3,7 @@
 * @Author: Farfan Sanchez Erick David
 * @Date: 12-Octubre-2021
 */
+#include <syslog.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "Cadenas.h"
@@ -11,7 +12,7 @@ char*Leer_Fichero(char ruta[],char buscar[]){
     FILE *f = fopen(ruta,"r");
     if (f==NULL)
     {
-        printf("\nError al abrir:%s\n",ruta);
+        syslog(LOG_INFO,"\nError al abrir:%s\n",ruta);
         return NULL;
     }
     else{
@@ -21,12 +22,12 @@ char*Leer_Fichero(char ruta[],char buscar[]){
         while (feof(f)!=1 && salir != 1) 
         {
             fgets (texto, BUFFER-1, f);  
-            //printf("\nLeyendo: %s\n",texto);
+            //syslog(LOG_INFO,"\nLeyendo: %s\n",texto);
             salir = Coincide(buscar,texto);
         }    
         fclose(f);
         if(salir){
-            //printf("\nRetorno: %s\n",texto);
+            //syslog(LOG_INFO,"\nRetorno: %s\n",texto);
             return texto;
         }else{
             return NULL;

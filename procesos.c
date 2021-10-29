@@ -17,37 +17,37 @@ void atiendeCliente(int cliente_sockfd)
     int mi_pid = getpid();
     /*	Inicia la transferencia de datos entre cliente y servidor
  */
-    //printf("Se aceptó un cliente y lo estoy atendiendo proceso %d\n", mi_pid);
-    printf("Se aceptó un cliente y lo estoy atendiendo proceso %d\n", mi_pid);
+    //syslog(LOG_INFO,"Se aceptó un cliente y lo estoy atendiendo proceso %d\n", mi_pid);
+    syslog(LOG_INFO,"Se aceptó un cliente y lo estoy atendiendo proceso %d\n", mi_pid);
     if (read(cliente_sockfd, leer_mensaje, TAM_BUFFER) < 0)
     {
         perror("Ocurrio algun problema al recibir datos del cliente");
-        printf("Ocurrio algun problema al recibir datos del cliente");
+        syslog(LOG_INFO,"Ocurrio algun problema al recibir datos del cliente");
         exit(EXIT_FAILURE);
     }
-    //printf("El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
-    printf("El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+    //syslog(LOG_INFO,"El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+    syslog(LOG_INFO,"El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
 
     if (write(cliente_sockfd, &mi_pid, sizeof(int)) < 0)
     {
         perror("Ocurrio un problema en el envio de un mensaje al cliente");
-        printf("Ocurrio un problema en el envio de un mensaje al cliente");
+        syslog(LOG_INFO,"Ocurrio un problema en el envio de un mensaje al cliente");
         exit(EXIT_FAILURE);
     }
     if (read(cliente_sockfd, leer_mensaje, TAM_BUFFER) < 0)
     {
         perror("Ocurrio algun problema al recibir datos del cliente");
-        printf("Ocurrio algun problema al recibir datos del cliente");
+        syslog(LOG_INFO,"Ocurrio algun problema al recibir datos del cliente");
         exit(EXIT_FAILURE);
     }
-    //printf("El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
-    printf("El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
-    //printf("Enviamos datos GPS \n %s \n", leer_mensaje);
-    printf("Enviamos datos GPS \n %s \n", leer_mensaje);
+    //syslog(LOG_INFO,"El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+    syslog(LOG_INFO,"El cliente nos envio el siguiente mensaje: \n %s \n", leer_mensaje);
+    //syslog(LOG_INFO,"Enviamos datos GPS \n %s \n", leer_mensaje);
+    syslog(LOG_INFO,"Enviamos datos GPS \n %s \n", leer_mensaje);
     if (write(cliente_sockfd, &dato, sizeof(GPGGA)) < 0)
     {
         perror("Ocurrio un problema en el envio de GPGGA al cliente");
-        printf("Ocurrio un problema en el envio de GPGGA al cliente");
+        syslog(LOG_INFO,"Ocurrio un problema en el envio de GPGGA al cliente");
         exit(EXIT_FAILURE);
     }
     close(cliente_sockfd);    

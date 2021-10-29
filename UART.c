@@ -23,7 +23,7 @@ void guardaDatos( unsigned char datos[] )
         apArch = fopen("Datos/nmea.txt", "w");
         if( apArch == NULL )
         {
-                printf("Error al abrir el archivo");
+                syslog(LOG_INFO,"Error al abrir el archivo");
                 exit(EXIT_FAILURE);
         }
         for( n = 0; n < N; n++ )
@@ -54,7 +54,7 @@ int config_serial( char *dispositivo_serial, speed_t baudios )
   	fd = open( dispositivo_serial, (O_RDWR | O_NOCTTY) & ~O_NONBLOCK );
 	if( fd == -1 )
 	{
-		printf("Error al abrir el dispositivo tty \n");        
+		syslog(LOG_INFO,"Error al abrir el dispositivo tty \n");        
 		exit( EXIT_FAILURE );
   	}
 /*
@@ -82,25 +82,25 @@ int config_serial( char *dispositivo_serial, speed_t baudios )
 // Configura la velocidad de salida del UART
   	if( cfsetospeed( &newtermios, baudios ) == -1 )
 	{
-		printf("Error al establecer velocidad de salida \n");
+		syslog(LOG_INFO,"Error al establecer velocidad de salida \n");
 		exit( EXIT_FAILURE );
   	}
 // Configura la velocidad de entrada del UART
 	if( cfsetispeed( &newtermios, baudios ) == -1 )
 	{
-		printf("Error al establecer velocidad de entrada \n" );
+		syslog(LOG_INFO,"Error al establecer velocidad de entrada \n" );
 		exit( EXIT_FAILURE );
 	}
 // Limpia el buffer de entrada
 	if( tcflush( fd, TCIFLUSH ) == -1 )
 	{
-		printf("Error al limpiar el buffer de entrada \n" );
+		syslog(LOG_INFO,"Error al limpiar el buffer de entrada \n" );
 		exit( EXIT_FAILURE );
 	}
 // Limpia el buffer de salida
 	if( tcflush( fd, TCOFLUSH ) == -1 )
 	{
-		printf("Error al limpiar el buffer de salida \n" );
+		syslog(LOG_INFO,"Error al limpiar el buffer de salida \n" );
 		exit( EXIT_FAILURE );
 	}
 /*
@@ -110,7 +110,7 @@ int config_serial( char *dispositivo_serial, speed_t baudios )
  */
 	if( tcsetattr( fd, TCSANOW, &newtermios ) == -1 )
 	{
-		printf("Error al establecer los parametros de la terminal \n" );
+		syslog(LOG_INFO,"Error al establecer los parametros de la terminal \n" );
 		exit( EXIT_FAILURE );
 	}
 //Retorna el descriptor de archivo
@@ -126,7 +126,7 @@ int Lectura_UART()
 	unsigned char datos[N+1];
 
 	fd_serie = config_serial( "/dev/ttyS0", B9600 );
-	printf("serial abierto con descriptor: %d\n", fd_serie);
+	syslog(LOG_INFO,"serial abierto con descriptor: %d\n", fd_serie);
 
 	//Leemos N datos del UART
 	dato = 0;	
@@ -134,7 +134,7 @@ int Lectura_UART()
 	{
 		read( fd_serie, &dato, 1 );
 		datos[i] = dato;
-		printf("%c", dato );        
+		syslog(LOG_INFO,"%c", dato );        
 	}
 	dato = 'h';
 	write( fd_serie, &dato, 1 );	

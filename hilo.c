@@ -20,8 +20,8 @@ extern int frenar;
 
 void *funHilo(void *arg)
 {
-    //printf("[TH_1:%ld]: Hola soy un hilo \n", pthread_self());
-    printf( "Hola soy un hilo \n");
+    //syslog(LOG_INFO,"[TH_1:%ld]: Hola soy un hilo \n", pthread_self());
+    syslog(LOG_INFO, "Hola soy un hilo \n");
 
     GPGGA *dato = (GPGGA *)arg;
     for (; EVER;)
@@ -30,35 +30,35 @@ void *funHilo(void *arg)
         {
             if (dato != NULL)
             {
-                ////printf("[Hilo] Inicio a leer archivo  \n", pthread_self());
-                printf( "[Hilo] Inicio a leer UART  \n");
+                ////syslog(LOG_INFO,"[Hilo] Inicio a leer archivo  \n", pthread_self());
+                syslog(LOG_INFO, "[Hilo] Inicio a leer UART  \n");
                 Lectura_UART();
-                printf( "[Hilo] Termine de leer UART  \n");
-                printf( "[Hilo] Inicio a leer archivo  \n");
+                syslog(LOG_INFO, "[Hilo] Termine de leer UART  \n");
+                syslog(LOG_INFO, "[Hilo] Inicio a leer archivo  \n");
                 char *texto = Leer_Fichero("Datos/nmea.txt", "$GPGGA");
                 Llenado_GPGGA(texto, dato);
                 free(texto);
-                printf( "[Hilo] Termine de leer archivo  \n");
-                //printf("[Hilo] Termine de leer archivo  \n");
+                syslog(LOG_INFO, "[Hilo] Termine de leer archivo  \n");
+                //syslog(LOG_INFO,"[Hilo] Termine de leer archivo  \n");
                 sleep(1);
             }
             else
             {
-                //printf("[TH_1:%ld]: Termine hilo Con ERROR\n", pthread_self());
-                printf( "[Hilo] Termine hilo Con ERROR\n");
+                //syslog(LOG_INFO,"[TH_1:%ld]: Termine hilo Con ERROR\n", pthread_self());
+                syslog(LOG_INFO, "[Hilo] Termine hilo Con ERROR\n");
                 pthread_exit(NULL);
             }
         }
         else
         {
-            //printf("[Hilo] Termine  \n");
-            printf( "[Hilo] Termine \n");
+            //syslog(LOG_INFO,"[Hilo] Termine  \n");
+            syslog(LOG_INFO, "[Hilo] Termine Ejecucion\n");
             pthread_exit(dato);
         }
     }
 }
 void Hilo(GPGGA *dato)
 {
-    printf( "\nCreo Hilo ...\n");
+    syslog(LOG_INFO, "\nCreo Hilo ...\n");
     pthread_create(&hilo, NULL, funHilo, (void *)dato);    
 }

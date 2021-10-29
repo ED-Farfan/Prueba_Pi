@@ -47,23 +47,23 @@ int iniServidor()
  *  Creacion de las estructuras necesarias para el manejo de un socket
  *  SOCK_STREAM - Protocolo orientado a conexión
  */
-    //printf("Creando Socket ....\n");
-    printf( "Creando Socket ....\n");
+    //syslog(LOG_INFO,"Creando Socket ....\n");
+    syslog(LOG_INFO, "Creando Socket ....\n");
     if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         perror("Ocurrio un problema en la creacion del socket");
-        printf( "Ocurrio un problema en la creacion del socket");
+        syslog(LOG_INFO, "Ocurrio un problema en la creacion del socket");
         exit(EXIT_FAILURE);
     }
     /*
  *  bind - Se utiliza para unir un socket con una dirección de red determinada
  */
-    //printf("Configurando socket ...\n");
-    printf( "Configurando socket ...\n");
+    //syslog(LOG_INFO,"Configurando socket ...\n");
+    syslog(LOG_INFO, "Configurando socket ...\n");
     if (bind(sockfd, (struct sockaddr *)&direccion_servidor, sizeof(direccion_servidor)) < 0)
     {
         perror("Ocurrio un problema al configurar el socket");
-        printf( "Ocurrio un problema al configurar el socket");
+        syslog(LOG_INFO, "Ocurrio un problema al configurar el socket");
         exit(EXIT_FAILURE);
     }
     /*
@@ -72,12 +72,12 @@ int iniServidor()
  *  Habilita una cola asociada la socket para alojar peticiones de conector procedentes
  *  de los procesos clientes
  */
-    //printf("Estableciendo la aceptacion de clientes...\n");
-    printf( "Estableciendo la aceptacion de clientes...\n");
+    //syslog(LOG_INFO,"Estableciendo la aceptacion de clientes...\n");
+    syslog(LOG_INFO, "Estableciendo la aceptacion de clientes...\n");
     if (listen(sockfd, COLA_CLIENTES) < 0)
     {
         perror("Ocurrio un problema al crear la cola de aceptar peticiones de los clientes");
-        printf( "Ocurrio un problema al crear la cola de aceptar peticiones de los clientes");
+        syslog(LOG_INFO, "Ocurrio un problema al crear la cola de aceptar peticiones de los clientes");
         exit(EXIT_FAILURE);
     }
     return sockfd;
@@ -92,13 +92,13 @@ int Servidor()
     if( signal( SIGCHLD, ISRsw ) == SIG_ERR )
 	{
 		perror("Error en la señal SIGCHLD\n");
-        printf( "Error en la señal SIGCHLD\n");
+        syslog(LOG_INFO, "Error en la señal SIGCHLD\n");
 		exit(EXIT_FAILURE); 
 	}
     if( signal( SIGINT, ISRsw ) == SIG_ERR )
 	{
 		perror("Error en la señal SIGINT\n");
-        printf( "Error en la señal SIGINT\n");
+        syslog(LOG_INFO, "Error en la señal SIGINT\n");
 		exit(EXIT_FAILURE); 
 	}
 
@@ -111,12 +111,12 @@ int Servidor()
     for (; EVER;)    
     {
         
-        //printf("\nEn espera de peticiones de conexión ...\n");
-        printf( "\nEn espera de peticiones de conexión ...\n");
+        //syslog(LOG_INFO,"\nEn espera de peticiones de conexión ...\n");
+        syslog(LOG_INFO, "\nEn espera de peticiones de conexión ...\n");
         if ((cliente_sockfd = accept(sockfd, NULL, NULL)) < 0)
         {
             perror("Ocurrio algun problema al atender a un cliente");
-            printf( "Ocurrio algun problema al atender a un cliente");
+            syslog(LOG_INFO, "Ocurrio algun problema al atender a un cliente");
             exit(EXIT_FAILURE);
         }
         pid = fork();
